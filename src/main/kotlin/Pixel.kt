@@ -1,0 +1,1 @@
+class Pixel(val x: Float, val y: Float, var index: Int)

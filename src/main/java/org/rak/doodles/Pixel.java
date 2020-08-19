@@ -1,7 +1,9 @@
+package org.rak.doodles;
+
 final class Pixel {
     private final float x;
     private final float y;
-    private final int index;
+    private int index;
 
     public Pixel(float x, float y, int index){
         this.x = x;
@@ -19,5 +21,9 @@ final class Pixel {
 
     public int getIndex(){
         return this.index;
+    }
+
+    public void setIndex(int newIndex){
+        this.index = newIndex;
     }
 }
