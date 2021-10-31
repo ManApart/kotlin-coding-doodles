@@ -1,9 +1,10 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    java
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.31"
 }
 
-group = "org.example"
+group = "org.rak"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -11,6 +12,13 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-    testCompile("junit", "junit", "4.12")
+    testImplementation(kotlin("test-testng"))
+}
+
+tasks.test {
+    useTestNG()
+}
+
+tasks.withType<KotlinCompile>() {
+    kotlinOptions.jvmTarget = "11"
 }
