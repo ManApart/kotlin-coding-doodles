@@ -9,6 +9,8 @@ class LambdaExamples {
     fun basic() {
         val namedThing = NamedThing()
         val lambda = { namedThing.name = "Hello Lambda" }
+        assertEquals("", namedThing.name)
+        
         lambda()
         assertEquals("Hello Lambda", namedThing.name)
     }
