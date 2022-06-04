@@ -1,5 +1,6 @@
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class Naming {
@@ -45,9 +46,9 @@ class Naming {
         val a: String? = "thingy"
         val b: String? = null
 
-        assertTrue(a.equals(b))
+        assertFalse(a.equals(b))
         assertTrue(a != null)
-        kotlin.test.assertTrue(a == b)
+        assertFalse(a == b)
 
     }
 
