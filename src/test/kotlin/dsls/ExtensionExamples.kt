@@ -1,6 +1,6 @@
 package dsls
 
-import kotlin.test.Test
+import org.testng.annotations.Test
 import kotlin.test.assertEquals
 
 class ExtensionExamples {
