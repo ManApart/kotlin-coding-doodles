@@ -13,7 +13,7 @@ fun Character.interpolate(line: String): String {
 
 private fun Character.replaceTemplate(template: String): String {
     return when {
-        template == "<name>" -> name
+        template == "name" -> name
         else -> template
     }
 }
@@ -31,7 +31,7 @@ private fun identifyTemplates(line: String): Pair<List<String>, List<String>>{
     val templates = chunks.map { (start, end) ->
         parts.add(line.substring(i, start))
         i = end
-        line.substring(start, end)
+        line.substring(start+1, end-1)
     }
     parts.add(line.substring(i, line.length))
 
