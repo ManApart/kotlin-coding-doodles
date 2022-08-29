@@ -35,3 +35,5 @@ enum class FriendshipKind(val titles: List<String>) {
         return titles[i-1]
     }
 }
+
+enum class Sex { MALE, FEMALE, UNKNOWN }

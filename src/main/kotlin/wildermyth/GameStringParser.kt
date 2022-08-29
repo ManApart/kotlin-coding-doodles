@@ -11,13 +11,6 @@ fun Character.interpolate(line: String): String {
     }
 }
 
-private fun Character.replaceTemplate(template: String): String {
-    return when {
-        template == "name" -> name
-        else -> template
-    }
-}
-
 private fun identifyTemplates(line: String): Pair<List<String>, List<String>>{
     val chunks = mutableListOf<Pair<Int, Int>>()
     var current = findToken(line, 0)
@@ -42,4 +35,24 @@ private fun findToken(line: String, from: Int): Pair<Int, Int>? {
     val start = line.indexOf("<", from)
     val end = line.indexOf(">", start)+1
     return if (start == -1 || end == -1) null else start to end
+}
+
+private fun Character.replaceTemplate(template: String): String {
+    val parts = template.split(":")
+    val type = parts.first()
+    val resultOptions = parts.last().split("/")
+    return when {
+        template == "name" -> name
+        type == "mf" -> replaceMF(resultOptions)
+        else -> template
+    }
+}
+
+private fun Character.replaceMF(resultOptions: List<String>): String {
+    return when {
+        sex == Sex.MALE -> resultOptions.first()
+        sex == Sex.FEMALE -> resultOptions[1]
+        resultOptions.size == 3 -> resultOptions.last()
+        else -> resultOptions.first()
+    }
 }
