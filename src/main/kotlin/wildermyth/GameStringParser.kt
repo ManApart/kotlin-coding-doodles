@@ -34,17 +34,22 @@ private fun identifyTemplates(line: String): Pair<List<String>, List<String>>{
 private fun findToken(line: String, from: Int): Pair<Int, Int>? {
     val start = line.indexOf("<", from)
     val end = line.indexOf(">", start)+1
-    return if (start == -1 || end == -1) null else start to end
+    return if (start == -1 || end == 0) null else start to end
 }
 
 private fun Character.replaceTemplate(template: String): String {
     val parts = template.split(":")
     val type = parts.first()
+    val typeOptions = type.split("/")
     val resultOptions = parts.last().split("/")
     return when {
         template == "name" -> name
         type == "mf" -> replaceMF(resultOptions)
-        else -> template
+        typeOptions.any { it in personalityNames } -> replacePersonality(typeOptions, resultOptions)
+        else ->  {
+            println("Unknown type: $type")
+            resultOptions.last()
+        }
     }
 }
 
@@ -55,4 +60,10 @@ private fun Character.replaceMF(resultOptions: List<String>): String {
         resultOptions.size == 3 -> resultOptions.last()
         else -> resultOptions.first()
     }
+}
+
+private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>): String {
+    val highest = typeOptions.maxByOrNull { personality[Personality.valueOf(it.uppercase())] ?: 0 } ?: typeOptions.first()
+    val resultIndex = typeOptions.indexOf(highest)
+    return resultOptions[resultIndex]
 }

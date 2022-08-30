@@ -7,6 +7,8 @@ fun classLevelFromInt(level: Int) = ClassLevel.values()[level]
 
 enum class Personality { BOOKISH, COWARD, GOOFBALL, GREEDY, HEALER, HOTHEAD, LEADER, LONER, POET, ROMANTIC, SNARK }
 
+val personalityNames =  Personality.values().map { it.name.lowercase() }
+
 data class Aspect(val name: String, val values: List<String> = listOf())
 
 data class HistoryEntry(
