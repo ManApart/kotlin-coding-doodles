@@ -10,15 +10,13 @@ data class StringChunk(private val input: String) : Chunk {
 
 data class Template(private val input: String, private val children: List<Chunk>) : Chunk {
     override fun interpolate(character: Character): String {
-        println(input)
-        println(children)
         val rebuilt = if (children.isEmpty()) input else children.joinToString("") { it.interpolate(character) }
         return character.replaceTemplate(rebuilt)
     }
 
 }
 
-fun Character.interpolate2(line: String): String {
+fun Character.interpolate(line: String): String {
     return buildChunks(line).joinToString("") { it.interpolate(this) }
 }
 
@@ -27,14 +25,15 @@ private fun buildChunks(line: String): List<Chunk> {
 }
 
 private fun buildChunks(from: Int, line: String): List<Chunk> {
-    val templateText = getTemplate(from, line) ?: return listOf()
+    val templateText = getTemplate(from, line) ?: return listOf(StringChunk(line.substring(from, line.length)))
 
     val children = buildChunks(0, templateText)
 
-    return listOf(
-        StringChunk(line.substring(from, line.indexOf(templateText)-1)),
+    val templateStart = line.indexOf("<$templateText", from)
+    return listOfNotNull(
+        if (templateStart > from) StringChunk(line.substring(from, templateStart)) else null,
         Template(templateText, children),
-    ) + buildChunks(line.indexOf(templateText) + templateText.length +1, line)
+    ) + buildChunks(templateStart + templateText.length + 2, line)
 }
 
 fun getTemplate(from: Int, line: String): String? {
@@ -42,24 +41,13 @@ fun getTemplate(from: Int, line: String): String? {
     if (start == -1) return null
     var i = start
     var depth = 1
-    while(depth > 0 && i < line.length){
+    while (depth > 0 && i < line.length) {
         i++
         val char = line[i]
         if (char == '<') depth++
         if (char == '>') depth--
     }
-    return line.substring(start+1, i)
-}
-
-fun Character.interpolate(line: String): String {
-    val (templates, parts) = identifyTemplates(line)
-    println("templates: $templates")
-    println("parts: $parts")
-    val interpolated = templates.map { this.replaceTemplate(it) }
-
-    return parts.indices.joinToString("") { i ->
-        parts[i] + (interpolated.getOrNull(i) ?: "")
-    }
+    return line.substring(start + 1, i)
 }
 
 private fun identifyTemplates(line: String): Pair<List<String>, List<String>> {
