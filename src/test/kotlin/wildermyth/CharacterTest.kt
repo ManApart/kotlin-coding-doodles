@@ -41,7 +41,7 @@ class CharacterTest {
         val character = Character("id", "Tom")
         assertEquals("<name", character.interpolate("<name"))
         assertEquals("name>", character.interpolate("name>"))
-        assertEquals("<name", character.interpolate("<<name>"))
+        assertEquals("<<name>", character.interpolate("<<name>"))
     }
 
     @Test

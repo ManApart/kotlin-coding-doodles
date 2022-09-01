@@ -13,7 +13,6 @@ data class Template(private val input: String, private val children: List<Chunk>
         val rebuilt = if (children.isEmpty()) input else children.joinToString("") { it.interpolate(character) }
         return character.replaceTemplate(rebuilt)
     }
-
 }
 
 fun Character.interpolate(line: String): String {
@@ -41,39 +40,13 @@ fun getTemplate(from: Int, line: String): String? {
     if (start == -1) return null
     var i = start
     var depth = 1
-    while (depth > 0 && i < line.length) {
+    while (depth > 0 && i < line.length - 1) {
         i++
         val char = line[i]
         if (char == '<') depth++
         if (char == '>') depth--
     }
-    return line.substring(start + 1, i)
-}
-
-private fun identifyTemplates(line: String): Pair<List<String>, List<String>> {
-    val chunks = mutableListOf<Pair<Int, Int>>()
-    var current = findToken(line, 0)
-    while (current != null) {
-        chunks.add(current)
-        current = findToken(line, chunks.last().second)
-    }
-
-    val parts = mutableListOf<String>()
-    var i = 0
-    val templates = chunks.map { (start, end) ->
-        parts.add(line.substring(i, start))
-        i = end
-        line.substring(start + 1, end - 1)
-    }
-    parts.add(line.substring(i, line.length))
-
-    return templates to parts
-}
-
-private fun findToken(line: String, from: Int): Pair<Int, Int>? {
-    val start = line.indexOf("<", from)
-    val end = line.indexOf(">", start) + 1
-    return if (start == -1 || end == 0) null else start to end
+    return if (depth == 0) line.substring(start + 1, i) else null
 }
 
 private fun Character.replaceTemplate(template: String): String {
