@@ -75,6 +75,10 @@ private fun Character.replaceMF(resultOptions: List<String>): String {
 }
 
 private fun Character.replacePersonality(typeOptions: List<String>, resultOptions: List<String>): String {
+    //For some reason personality may be undefined here
+//    if (personality == undefined) {
+//        personality = getPersonality()
+//    }
     val highest =
         typeOptions.maxByOrNull { personality[Personality.valueOf(it.uppercase())] ?: 0 } ?: typeOptions.first()
     val resultIndex = typeOptions.indexOf(highest)
