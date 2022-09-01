@@ -7,6 +7,23 @@ import kotlin.test.assertEquals
 
 class CharacterTest {
     @Test
+    fun getTemplate(){
+        assertEquals("name", getTemplate(0, "<name>" ))
+        assertEquals(null, getTemplate(0, "name" ))
+        assertEquals("mf:his <name>/her <name>", getTemplate(0, "<mf:his <name>/her <name>>"))
+        assertEquals("mf:his <name>/her <name>", getTemplate(0, "<mf:his <name>/her <name>> is my <name>"))
+        assertEquals("name", getTemplate(2, "<mf:his <name>/her <name>> is my <name>"))
+    }
+//    @Test
+//    fun getTemplate(){
+//        assertEquals("<name>", getTemplate(0, "<name>" ))
+//        assertEquals(null, getTemplate(0, "name" ))
+//        assertEquals("<mf:his <name>/her <name>>", getTemplate(0, "<mf:his <name>/her <name>>"))
+//        assertEquals("<mf:his <name>/her <name>>", getTemplate(0, "<mf:his <name>/her <name>> is my <name>"))
+//        assertEquals("<name>", getTemplate(2, "<mf:his <name>/her <name>> is my <name>"))
+//    }
+
+    @Test
     fun replaceName(){
         val character = Character("id", "Bob")
         val actual = character.interpolate("<name>")
@@ -72,6 +89,24 @@ class CharacterTest {
         val characterC = Character("id", "Sally", personality = buildPersonality(Personality.SNARK))
         assertEquals("a break from babysitting", characterC.interpolate(line))
     }
+
+    @Test
+    fun nestedReplace(){
+        val line = "The <bookish/hothead/poet:<mf:man/woman> was a nerd/bruiser/acclaimed <mf:actor/actress>>"
+
+        val characterA = Character("id", "Tom", sex= Sex.MALE, personality = buildPersonality(Personality.BOOKISH))
+        assertEquals("The man was a nerd", characterA.interpolate2(line))
+
+        val characterB = Character("id", "Tom", sex= Sex.MALE, personality = buildPersonality(Personality.HOTHEAD))
+        assertEquals("The bruiser", characterB.interpolate2(line))
+
+        val characterC = Character("id", "Tom", sex= Sex.MALE, personality = buildPersonality(Personality.POET))
+        assertEquals("The acclaimed actor", characterC.interpolate2(line))
+
+        val characterD = Character("id", "Sally", sex= Sex.FEMALE, personality = buildPersonality(Personality.POET))
+        assertEquals("The acclaimed actress", characterD.interpolate2(line))
+    }
+
 }
 
 private fun buildPersonality(highest: Personality): Map<Personality, Int> {
