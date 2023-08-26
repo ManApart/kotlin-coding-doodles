@@ -11,8 +11,10 @@ data class Project(val name: String = "project", val language: String = "java"){
 }
 
 @Serializable
-class Box<T>(val contents: T)
+data class Box<T>(val contents: T)
 
+@Serializable
+data class Data(val a: Box<Int>, val b: Box<Project>)
 
 private val dateRegex = Regex("[0-9]{2}-[0-9]{2}-[0-9]{4}")
 

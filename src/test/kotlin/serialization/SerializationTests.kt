@@ -12,17 +12,41 @@ class SerializationTests {
 
     @Test
     fun basic() {
-        val project = Project()
+        val project = Project("work", "kotlin")
         val json = Json.encodeToString(project)
         val actual = Json.decodeFromString<Project>(json)
         assertEquals(project, actual)
     }
 
     @Test
-    fun validation() {
+    fun optionalPropertyDefault() {
+        val actual = Json.decodeFromString<Project>("""{"name": "bob"}""")
+        assertEquals(Project("bob", "java"), actual)
+    }
+
+    @Test
+    fun noBlankProjectNames() {
         assertThrows(IllegalArgumentException::class.java) {
             Project("")
         }
+    }
+
+    @Test
+    fun genericStuff() {
+        val expected = Data(Box(1), Box(Project("wrapped", "english")))
+        val json = """{
+              "a": {
+                "contents": "1"
+              },
+              "b": {
+                "contents": {
+                  "name": "wrapped",
+                  "language": "english"
+                }
+              }
+            }"""
+        val actual = Json.decodeFromString<Data>(json)
+        assertEquals(expected, actual)
     }
 
     @Test
