@@ -1,3 +1,5 @@
+package gherkin
+
 import kotlin.test.Test
 
 class GherkinExampleTest {
