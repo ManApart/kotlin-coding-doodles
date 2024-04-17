@@ -1,6 +1,6 @@
 import kotlin.test.Test
 
-class GherkinBuilderExample {
+class GherkinExampleTest {
 
     @Test
     fun firstTest() {

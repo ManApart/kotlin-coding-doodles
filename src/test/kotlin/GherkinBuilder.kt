@@ -1,28 +1,39 @@
-class Calculator(var firstNumber: Int, var secondNumber: Int)
+import kotlin.test.assertEquals
 
-//Test Helper functions
 infix fun Calculator.hasFirstNumber(amount: Int){
+    firstNumber = amount
 }
 infix fun Calculator.hasSecondNumber(amount: Int){
+    secondNumber = amount
 }
-fun numbersAreAdded(){
+
+fun ScenarioBuilder.numbersAreAdded(){
+    subject.add()
 }
 
 infix fun Calculator.shouldHaveResult(amount: Int){
+    assertEquals(amount, result)
 }
 
 class ScenarioBuilder(val description: String){
+    val subject: Calculator = Calculator()
+    private val thens = mutableListOf<(Calculator) -> Unit>()
+
+    fun and(condition: (Calculator) -> Unit) = given(condition)
     fun given(condition: (Calculator) -> Unit){
+        condition(subject)
     }
-    fun and(condition: (Calculator) -> Unit){
-    }
+
     fun where(condition: (Calculator) -> Unit){
+        condition(subject)
     }
+
     fun then(condition: (Calculator) -> Unit){
+        thens.add(condition)
     }
 
     fun run(){
-        //Compiles the given,whens and then, runs asserts as part of the then
+        thens.forEach { it(subject) }
     }
 }
 
